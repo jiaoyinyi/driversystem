@@ -2,6 +2,7 @@ package model
 
 //管理员
 type User struct {
-	Username string `json:"username" xorm:"pk"`
+	Uid      int    `json:"uid" xorm:"pk autoincr"`
+	Username string `json:"username"`
 	Password string `json:"password"`
 }
