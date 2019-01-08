@@ -1,8 +1,8 @@
 package main
 
 import (
-	"driversystem/controller"
 	_ "driversystem/db"
+	"driversystem/route"
 	"github.com/gorilla/securecookie"
 	"github.com/gorilla/sessions"
 	"github.com/labstack/echo"
@@ -15,8 +15,7 @@ func main() {
 	e.Use(session.Middleware(sessions.NewCookieStore([]byte(securecookie.GenerateRandomKey(32)))))
 
 	g := e.Group("")
-
-	new(controller.UserController).RegisterRoute(g)
+	route.RegisterAllRoutes(g)
 
 	err := e.Start(":10006")
 	log.Println(err)
