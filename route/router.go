@@ -14,4 +14,6 @@ func RegisterAllRoutes(g *echo.Group) {
 	new(controller.HealthController).RegisterRoute(g)
 	//注册学员驾照信息路由
 	new(controller.LicenseController).RegisterRoute(g)
+	//注册学科信息路由
+	new(controller.CourseController).RegisterRoute(g)
 }
