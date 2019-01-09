@@ -5,7 +5,7 @@ import (
 	"strconv"
 )
 
-var perPage = 25
+var PerPage = 25
 
 type PageLogic struct{}
 
@@ -23,7 +23,7 @@ func (PageLogic) GetPage(ctx echo.Context) (int, int) {
 			page = 0
 		}
 	}
-	offset := int(page) * perPage
-	limit := perPage
+	offset := int(page) * PerPage
+	limit := PerPage
 	return offset, limit
 }

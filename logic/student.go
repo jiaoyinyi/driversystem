@@ -12,12 +12,12 @@ type StudentLogic struct{}
 var DefaultStudent = StudentLogic{}
 
 //插入学员信息
-func (this StudentLogic) CreateStudent(s *model.Student) error {
+func (this StudentLogic) CreateStudent(s *model.Student, cols []string) error {
 	if this.StudentExist(s.Sno) {
 		return errors.New("student exist error")
 	}
 
-	_, err := MasterDB.Insert(s)
+	_, err := MasterDB.Cols(cols...).Insert(s)
 	return err
 }
 
@@ -101,8 +101,8 @@ func (this StudentLogic) DeleteStudent(sno int) bool {
 	return true
 }
 
-func (this StudentLogic) UpdateStudent(s *model.Student) bool {
-	num, _ := MasterDB.Where("sno=?", s.Sno).Update(s)
+func (this StudentLogic) UpdateStudent(s *model.Student, cols []string) bool {
+	num, _ := MasterDB.Where("sno=?", s.Sno).Cols(cols...).Update(s)
 	if num == 0 {
 		return false
 	}

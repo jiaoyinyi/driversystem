@@ -6,7 +6,6 @@ import (
 	"driversystem/middleware"
 	"driversystem/model"
 	"github.com/labstack/echo"
-	"log"
 	"strconv"
 )
 
@@ -75,6 +74,7 @@ DEAL:
 	infos = logic.DefaultStudent.DealStudents(students)
 	data := map[string]interface{}{
 		"total_count": count,
+		"per_page":    logic.PerPage,
 		"students":    infos,
 	}
 	return Success(ctx, data)
@@ -82,6 +82,9 @@ DEAL:
 
 func (this StudentController) AddStudent(ctx echo.Context) error {
 	student := &model.Student{}
+	cols := []string{
+		"sno", "sname", "sex", "identify", "car_type", "enroll_time", "scondition",
+	}
 
 	sname := ctx.FormValue("sname")
 	if sname == "" {
@@ -107,6 +110,7 @@ func (this StudentController) AddStudent(ctx echo.Context) error {
 			return Fail(ctx, 0, "age错误")
 		}
 		student.Age = int(age)
+		cols = append(cols,"age")
 	}
 
 	identify := ctx.FormValue("identify")
@@ -119,6 +123,7 @@ func (this StudentController) AddStudent(ctx echo.Context) error {
 	if tel != "" {
 		//可以为空
 		student.Tel = tel
+		cols = append(cols,"tel")
 	}
 
 	carType := ctx.FormValue("car_type")
@@ -145,6 +150,7 @@ func (this StudentController) AddStudent(ctx echo.Context) error {
 			return Fail(ctx, 0, "leave_time错误")
 		}
 		student.LeaveTime = leaveTime
+		cols = append(cols,"leave_time")
 	}
 
 	scondition := ctx.FormValue("scondition")
@@ -161,9 +167,10 @@ func (this StudentController) AddStudent(ctx echo.Context) error {
 	if sText != "" {
 		//可以为空
 		student.SText = sText
+		cols = append(cols,"s_text")
 	}
 
-	err = logic.DefaultStudent.CreateStudent(student)
+	err = logic.DefaultStudent.CreateStudent(student,cols)
 	if err != nil {
 		return Fail(ctx, 0, "添加学员信息失败")
 	}
@@ -181,17 +188,17 @@ func (this StudentController) UpdateStudentInfo(ctx echo.Context) error {
 		return Fail(ctx, 0, "sno错误")
 	}
 
-	log.Println(sno)
 	//查找是否有该学员
 	student := logic.DefaultStudent.FindOne(int(sno))
 	if student == nil {
 		return Fail(ctx, 0, "没有该学员信息")
 	}
-	log.Println(student)
+	cols := []string{}
 
 	sname := ctx.FormValue("sname")
 	if sname != "" {
 		student.Sname = sname
+		cols = append(cols,"sname")
 	}
 
 	sex := ctx.FormValue("sex")
@@ -201,6 +208,7 @@ func (this StudentController) UpdateStudentInfo(ctx echo.Context) error {
 			return Fail(ctx, 0, "sex错误")
 		}
 		student.Sex = sex
+		cols = append(cols,"sex")
 	}
 
 	strAge := ctx.FormValue("age")
@@ -210,6 +218,7 @@ func (this StudentController) UpdateStudentInfo(ctx echo.Context) error {
 			return Fail(ctx, 0, "age错误")
 		}
 		student.Age = int(age)
+		cols = append(cols,"age")
 	}
 
 	identify := ctx.FormValue("identify")
@@ -220,11 +229,13 @@ func (this StudentController) UpdateStudentInfo(ctx echo.Context) error {
 	tel := ctx.FormValue("tel")
 	if tel != "" {
 		student.Tel = tel
+		cols = append(cols,"tel")
 	}
 
 	carType := ctx.FormValue("car_type")
 	if carType != "" {
 		student.CarType = carType
+		cols = append(cols,"car_type")
 	}
 
 	strEnrollTime := ctx.FormValue("enroll_time")
@@ -234,6 +245,7 @@ func (this StudentController) UpdateStudentInfo(ctx echo.Context) error {
 			return Fail(ctx, 0, "enroll_time错误")
 		}
 		student.EnrollTime = enrollTime
+		cols = append(cols,"enroll_time")
 	}
 
 	strLeaveTime := ctx.FormValue("leave_time")
@@ -244,6 +256,7 @@ func (this StudentController) UpdateStudentInfo(ctx echo.Context) error {
 			return Fail(ctx, 0, "leave_time错误")
 		}
 		student.LeaveTime = leaveTime
+		cols = append(cols,"leave_time")
 	}
 
 	scondition := ctx.FormValue("scondition")
@@ -253,14 +266,16 @@ func (this StudentController) UpdateStudentInfo(ctx echo.Context) error {
 			return Fail(ctx, 0, "scondition错误")
 		}
 		student.Scondition = scondition
+		cols = append(cols,"scondition")
 	}
 
 	sText := ctx.FormValue("s_text")
 	if sText != "" {
 		student.SText = sText
+		cols = append(cols,"s_text")
 	}
 
-	ok := logic.DefaultStudent.UpdateStudent(student)
+	ok := logic.DefaultStudent.UpdateStudent(student,cols)
 	if !ok {
 		return Fail(ctx, 0, "更新学员信息失败")
 	}
