@@ -61,18 +61,20 @@ func (this LicenseController) SearchLicenseInfo(ctx echo.Context) error {
 
 DEALONE:
 	{
+		info := logic.DefaultLicense.DealLicense(lisence)
 		data := map[string]interface{}{
-			"license_info": lisence,
+			"license_info": info,
 		}
 		return Success(ctx, data)
 	}
 
 DEALMANY:
 	{
+		infos := logic.DefaultLicense.DealLicenses(lisences)
 		data := map[string]interface{}{
 			"total_count":   count,
 			"per_page":      logic.PerPage,
-			"license_infos": lisences,
+			"license_infos": infos,
 		}
 		return Success(ctx, data)
 	}

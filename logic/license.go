@@ -98,3 +98,24 @@ func (this LicenseLogic) LicenseExist(sno int) bool {
 	exist, _ := MasterDB.Where("sno=?", sno).Exist(l)
 	return exist
 }
+
+func (this LicenseLogic) DealLicense(l *model.License) *model.LicenseInfo {
+	info := &model.LicenseInfo{
+		Id:          l.Id,
+		Sno:         l.Sno,
+		Sname:       l.Sname,
+		Lno:         l.Lno,
+		ReceiveTime: FormatTime(l.ReceiveTime),
+		ReceiveName: l.ReceiveName,
+		LText:       l.LText,
+	}
+	return info
+}
+
+func (this LicenseLogic) DealLicenses(ls []*model.License) []*model.LicenseInfo {
+	infos := make([]*model.LicenseInfo, len(ls))
+	for index, l := range ls {
+		infos[index] = this.DealLicense(l)
+	}
+	return infos
+}
