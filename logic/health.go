@@ -4,6 +4,7 @@ import (
 	. "driversystem/db"
 	"driversystem/model"
 	"errors"
+	"github.com/go-xorm/xorm"
 	"github.com/labstack/echo"
 	"log"
 )
@@ -100,6 +101,12 @@ func (this HealthLogic) DeleteHealthInfo(id int) bool {
 		return false
 	}
 	return true
+}
+
+func (this HealthLogic) DeleteHealthInfoBySno(sess *xorm.Session, sno int) error {
+	h := &model.Health{}
+	_, err := sess.Where("sno=?", sno).Delete(h)
+	return err
 }
 
 func (this HealthLogic) UpdateHealthInfo(h *model.Health, cols []string) bool {

@@ -4,6 +4,7 @@ import (
 	. "driversystem/db"
 	"driversystem/model"
 	"errors"
+	"github.com/go-xorm/xorm"
 	"github.com/labstack/echo"
 )
 
@@ -91,6 +92,12 @@ func (this LicenseLogic) DeleteLicenseInfo(id int) bool {
 		return false
 	}
 	return true
+}
+
+func (this LicenseLogic) DeleteLicenseInfoBySno(sess *xorm.Session, sno int) error {
+	l := &model.License{}
+	_, err := sess.Where("sno=?", sno).Delete(l)
+	return err
 }
 
 func (this LicenseLogic) LicenseExist(sno int) bool {

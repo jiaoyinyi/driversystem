@@ -93,9 +93,37 @@ func (this StudentLogic) FindOne(sno int) *model.Student {
 
 //删除学员信息
 func (this StudentLogic) DeleteStudent(sno int) bool {
+	sess := MasterDB.NewSession()
+	defer sess.Close()
+
+	sess.Begin()
 	s := &model.Student{}
-	num, _ := MasterDB.Where("sno=?", sno).Delete(s)
-	if num == 0 {
+	_, err := sess.Where("sno=?", sno).Delete(s)
+	if err != nil {
+		sess.Rollback()
+		return false
+	}
+	//当删除了该sno的数据，要连同驾照表、体检表、成绩表的sno数据删除
+	err = DefaultLicense.DeleteLicenseInfoBySno(sess, sno)
+	if err != nil {
+		sess.Rollback()
+		return false
+	}
+
+	err = DefaultHealth.DeleteHealthInfoBySno(sess, sno)
+	if err != nil {
+		sess.Rollback()
+		return false
+	}
+
+	err = DefaultGrade.DeleteGradeInfoBySno(sess, sno)
+	if err != nil {
+		sess.Rollback()
+		return false
+	}
+
+	err = sess.Commit()
+	if err != nil {
 		return false
 	}
 	return true

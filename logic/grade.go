@@ -4,6 +4,7 @@ import (
 	. "driversystem/db"
 	"driversystem/model"
 	"errors"
+	"github.com/go-xorm/xorm"
 	"github.com/labstack/echo"
 )
 
@@ -86,6 +87,18 @@ func (this GradeLogic) DeleteGradeInfo(id int) bool {
 		return false
 	}
 	return true
+}
+
+func (this GradeLogic) DeleteGradeInfoBySno(sess *xorm.Session, sno int) error {
+	g := &model.Grade{}
+	_, err := sess.Where("sno=?", sno).Delete(g)
+	return err
+}
+
+func (this GradeLogic) DeleteGradeInfoByCno(sess *xorm.Session, cno int) error {
+	g := &model.Grade{}
+	_, err := sess.Where("cno=?", cno).Delete(g)
+	return err
 }
 
 func (this GradeLogic) GradeExist(sno, cno int) bool {
