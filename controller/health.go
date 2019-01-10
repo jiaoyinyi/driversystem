@@ -33,7 +33,7 @@ func (this HealthController) SearchHealthInfo(ctx echo.Context) error {
 		}
 		health := logic.DefaultHealth.FindOneBySno(int(sno))
 		if health == nil {
-			return Fail(ctx, 0, "查询学员体检信息失败")
+			return Fail(ctx, 0, "没有该学员")
 		}
 		data := map[string]interface{}{
 			"health_info": health,
@@ -206,6 +206,7 @@ func (this HealthController) AddHealthInfo(ctx echo.Context) error {
 }
 
 func (this HealthController) UpdateHealthInfo(ctx echo.Context) error {
+
 	strId := ctx.FormValue("id")
 	if strId == "" {
 		return Fail(ctx, 0, "没有id")
@@ -214,11 +215,8 @@ func (this HealthController) UpdateHealthInfo(ctx echo.Context) error {
 	if err != nil {
 		return Fail(ctx, 0, "id错误")
 	}
-	health := logic.DefaultHealth.FindOne(int(id))
-	if health == nil {
-		return Fail(ctx, 0, "没有该体检信息")
-	}
 
+	health := &model.Health{Id: int(id)}
 	cols := []string{}
 
 	strHeight := ctx.FormValue("height")

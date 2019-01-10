@@ -188,11 +188,7 @@ func (this StudentController) UpdateStudentInfo(ctx echo.Context) error {
 		return Fail(ctx, 0, "sno错误")
 	}
 
-	//查找是否有该学员
-	student := logic.DefaultStudent.FindOne(int(sno))
-	if student == nil {
-		return Fail(ctx, 0, "没有该学员信息")
-	}
+	student := &model.Student{Sno:int(sno)}
 	cols := []string{}
 
 	sname := ctx.FormValue("sname")

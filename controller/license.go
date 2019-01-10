@@ -148,10 +148,8 @@ func (this LicenseController) UpdateLicenseInfo(ctx echo.Context) error {
 	if err != nil {
 		return Fail(ctx, 0, "id错误")
 	}
-	license := logic.DefaultLicense.FindOne(int(id))
-	if license == nil {
-		return Fail(ctx, 0, "没有该驾照信息")
-	}
+
+	license := &model.License{Id: int(id)}
 	cols := []string{}
 
 	lno := ctx.FormValue("lno")
