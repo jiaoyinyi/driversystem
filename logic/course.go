@@ -42,3 +42,9 @@ func (this CourseLogic) DeleteCourse(cno int) bool {
 	}
 	return true
 }
+
+func (this CourseLogic) CourseExist(cno int) bool {
+	c := &model.Course{}
+	exist, _ := MasterDB.Where("cno=?", cno).Exist(c)
+	return exist
+}

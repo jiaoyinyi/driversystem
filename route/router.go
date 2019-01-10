@@ -16,4 +16,6 @@ func RegisterAllRoutes(g *echo.Group) {
 	new(controller.LicenseController).RegisterRoute(g)
 	//注册学科信息路由
 	new(controller.CourseController).RegisterRoute(g)
+	//注册学员成绩信息路由
+	new(controller.GradeController).RegisterRoute(g)
 }
